@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ContactController
 {
@@ -30,11 +31,20 @@ class ContactController
      */
     private $swaggerResolverFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SwaggerResolverFactory $swaggerResolverFactory)
-    {
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SwaggerResolverFactory $swaggerResolverFactory,
+        SerializerInterface $serializer
+    ) {
         $this->entityManager = $entityManager;
         $this->contactRepository = $entityManager->getRepository(Contact::class);
         $this->swaggerResolverFactory = $swaggerResolverFactory;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -131,10 +141,8 @@ class ContactController
     public function postAction(Request $request): JsonResponse
     {
         $this->validateRequest($request);
+        $contact = $this->serializer->deserialize($request->getContent(),Contact::class, 'json');
 
-        $contact = new Contact();
-
-        $this->updateEntity($contact, json_decode($request->getContent(), true));
         $this->entityManager->persist($contact);
         $this->entityManager->flush();
 
@@ -205,7 +213,7 @@ class ContactController
             throw new NotFoundHttpException();
         }
 
-        $this->updateEntity($contact, json_decode($request->getContent(), true));
+        $this->updateObject($contact, $request->getContent());
         $this->entityManager->flush();
 
         return $this->createJsonResponse($contact);
@@ -246,26 +254,21 @@ class ContactController
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 
-    private function createJsonResponse(Contact $contact): JsonResponse
+    private function updateObject(object $target, string $jsonData)
     {
-        $jsonData = [
-            'id' => $contact->getId(),
-            'name' => $contact->getName(),
-            'email' => $contact->getEmail(),
-            'country' => $contact->getCountry(),
-        ];
-
-        return new JsonResponse($jsonData);
+        $this->serializer->deserialize(
+            $jsonData,
+            get_class($target),
+            'json',
+            ['object_to_populate' => $target]
+        );
     }
 
-    private function updateEntity(Contact $contact, array $updateData)
+    private function createJsonResponse(object $data): JsonResponse
     {
-        $contact->setName($updateData['name']);
-        $contact->setCountry($updateData['country']);
+        $jsonData = $this->serializer->serialize($data, 'json');
 
-        if (array_key_exists('email', $updateData)) {
-            $contact->setEmail($updateData['email']);
-        }
+        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
     protected function validateRequest(Request $request)
