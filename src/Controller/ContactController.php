@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Contact;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +25,16 @@ class ContactController
      */
     private $contactRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    /**
+     * @var SwaggerResolverFactory
+     */
+    private $swaggerResolverFactory;
+
+    public function __construct(EntityManagerInterface $entityManager, SwaggerResolverFactory $swaggerResolverFactory)
     {
         $this->entityManager = $entityManager;
         $this->contactRepository = $entityManager->getRepository(Contact::class);
+        $this->swaggerResolverFactory = $swaggerResolverFactory;
     }
 
     /**
@@ -123,6 +130,8 @@ class ContactController
      */
     public function postAction(Request $request): JsonResponse
     {
+        $this->validateRequest($request);
+
         $contact = new Contact();
 
         $this->updateEntity($contact, json_decode($request->getContent(), true));
@@ -189,6 +198,8 @@ class ContactController
      */
     public function putAction(Request $request, int $id): JsonResponse
     {
+        $this->validateRequest($request);
+
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
             throw new NotFoundHttpException();
@@ -255,5 +266,14 @@ class ContactController
         if (array_key_exists('email', $updateData)) {
             $contact->setEmail($updateData['email']);
         }
+    }
+
+    protected function validateRequest(Request $request)
+    {
+        $swaggerResolver = $this->swaggerResolverFactory->createForRequest($request);
+        $swaggerResolver->resolve(array_merge(
+            json_decode($request->getContent(), true),
+            $request->attributes->get('_route_params')
+        ));
     }
 }

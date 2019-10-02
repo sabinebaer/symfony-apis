@@ -4,8 +4,71 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec632c09d5913473b801b46be9c1b7b3",
+    "content-hash": "f965824c118e82d9aaee126981af499c",
     "packages": [
+        {
+            "name": "adrenalinkin/swagger-resolver-bundle",
+            "version": "v0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adrenalinkin/swagger-resolver-bundle.git",
+                "reference": "8707a68191496928079118dac361c050a0789d3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adrenalinkin/swagger-resolver-bundle/zipball/8707a68191496928079118dac361c050a0789d3a",
+                "reference": "8707a68191496928079118dac361c050a0789d3a",
+                "shasum": ""
+            },
+            "require": {
+                "exsyst/swagger": "~0.4",
+                "ext-json": "*",
+                "php": "~7.1",
+                "symfony/config": "~3.4||~4.0",
+                "symfony/dependency-injection": "~3.4||~4.0",
+                "symfony/http-foundation": "~3.4||~4.0",
+                "symfony/http-kernel": "~3.4||~4.0",
+                "symfony/options-resolver": "~3.4||~4.0",
+                "symfony/routing": "~3.4||~4.0",
+                "symfony/yaml": "~3.4||~4.0"
+            },
+            "suggest": {
+                "nelmio/api-doc-bundle": "Generates documentation for your REST API from annotations",
+                "symfony/symfony": "Allows more advanced functionality with full Symfony package",
+                "zircote/swagger-php": "Allows to generate Swagger configuration by php annotations"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Linkin\\Bundle\\SwaggerResolverBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Viktor Linkin",
+                    "email": "adrenalinkin@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Provides possibility for validate data according to Swagger documentation",
+            "keywords": [
+                "Swagger-PHP",
+                "api",
+                "api-documentation",
+                "api-validation",
+                "documentation",
+                "open-api",
+                "resolver",
+                "swagger",
+                "symfony-bundle",
+                "validation"
+            ],
+            "time": "2019-04-13T15:47:34+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.8.0",

@@ -27,7 +27,7 @@ class Contact
     private $name;
 
     /**
-     * @var string
+     * @var null|string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -60,12 +60,12 @@ class Contact
         $this->name = $name;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }

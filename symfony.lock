@@ -1,4 +1,7 @@
 {
+    "adrenalinkin/swagger-resolver-bundle": {
+        "version": "v0.4.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
