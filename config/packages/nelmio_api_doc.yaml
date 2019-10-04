@@ -4,7 +4,7 @@ nelmio_api_doc:
             title: Contacts API
             description: An API for fetching, adding, adapting and deleting contacts.
             version: 1.0.0
-    areas: # Include everything available at /api except of the doc APIs.
+    areas: # Include everything available at /api except the doc APIs.
         default:
             path_patterns:
                 - ^/api(?!/(doc.json|doc)$)
